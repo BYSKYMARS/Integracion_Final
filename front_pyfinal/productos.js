@@ -10,10 +10,14 @@ if (!token) {
     window.location.href = 'index.html';
 }
 
+document.getElementById('usuarioNombre').innerText = localStorage.getItem('usuario') || "Usuario";
+
+// 2. CERRAR SESIÓN
 document.getElementById('btnCerrarSesion').addEventListener('click', () => {
     localStorage.clear();
     window.location.href = 'index.html';
 });
+
 
 // 2. INICIALIZACIÓN
 document.addEventListener("DOMContentLoaded", async () => {

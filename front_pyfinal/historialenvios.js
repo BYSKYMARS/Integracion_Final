@@ -8,6 +8,15 @@ window.onload = () => {
     cargarHistorialCompleto();
 };
 
+document.getElementById('usuarioNombre').innerText = localStorage.getItem('usuario') || "Usuario";
+
+// 2. CERRAR SESIÓN
+document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'index.html';
+});
+
+
 async function cargarHistorialCompleto() {
     try {
         const res = await fetch(`${API_URL}/HistorialEnvios`, {

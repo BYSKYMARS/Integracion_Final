@@ -8,11 +8,14 @@ if (!token) window.location.href = 'index.html';
 window.onload = () => {
     listarEnvios();
 };
+document.getElementById('usuarioNombre').innerText = localStorage.getItem('usuario') || "Usuario";
+
 // 2. CERRAR SESIÓN
 document.getElementById('btnCerrarSesion').addEventListener('click', () => {
     localStorage.clear();
     window.location.href = 'index.html';
 });
+
 // Función auxiliar para limpiar FORZADAMENTE los residuos de los modales
 function limpiarModalResiduos() {
     document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
