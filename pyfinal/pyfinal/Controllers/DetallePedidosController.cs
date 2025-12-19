@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using pyfinal.Data;
 using pyfinal.Models;
 using System;
@@ -84,7 +85,15 @@ namespace pyfinal.Controllers
         [Authorize(Policy = "PuedeGestionarDetallesPedido")]
         public async Task<ActionResult<DetallePedido>> PostDetallePedido(DetallePedido detallePedido)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Detectar proveedor InMemory (no soporta transacciones)
+            var providerName = _context.Database.ProviderName ?? string.Empty;
+            var isInMemory = providerName.Contains("InMemory", StringComparison.OrdinalIgnoreCase);
+
+            IDbContextTransaction? transaction = null;
+            if (!isInMemory)
+            {
+                transaction = await _context.Database.BeginTransactionAsync();
+            }
 
             try
             {
@@ -108,19 +117,23 @@ namespace pyfinal.Controllers
                 producto.Stock -= detallePedido.Cantidad;
 
                 // 2. Actualizar Total de la Cabecera
-                pedido.Total += (detallePedido.Cantidad * detallePedido.PrecioUnitario);
+                pedido!.Total += (detallePedido.Cantidad * detallePedido.PrecioUnitario);
 
                 // 3. Guardar el Detalle
                 _context.DetallesPedido.Add(detallePedido);
 
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+
+                if (transaction != null)
+                    await transaction.CommitAsync();
 
                 return CreatedAtAction("GetDetallePedido", new { id = detallePedido.Id }, detallePedido);
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                if (transaction != null)
+                    await transaction.RollbackAsync();
+
                 return StatusCode(500, $"Error: {ex.Message}");
             }
         }
@@ -130,7 +143,15 @@ namespace pyfinal.Controllers
         [Authorize(Policy = "PuedeGestionarDetallesPedido")]
         public async Task<IActionResult> DeleteDetallePedido(int id)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Detectar proveedor InMemory (no soporta transacciones)
+            var providerName = _context.Database.ProviderName ?? string.Empty;
+            var isInMemory = providerName.Contains("InMemory", StringComparison.OrdinalIgnoreCase);
+
+            IDbContextTransaction? transaction = null;
+            if (!isInMemory)
+            {
+                transaction = await _context.Database.BeginTransactionAsync();
+            }
 
             try
             {
@@ -163,13 +184,17 @@ namespace pyfinal.Controllers
                 _context.DetallesPedido.Remove(detallePedido);
 
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+
+                if (transaction != null)
+                    await transaction.CommitAsync();
 
                 return NoContent();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                if (transaction != null)
+                    await transaction.RollbackAsync();
+
                 return StatusCode(500, $"Error al revertir: {ex.Message}");
             }
         }

@@ -38,6 +38,17 @@ namespace pyfinal_Tests
             context.Productos.Add(producto);
             await context.SaveChangesAsync();
 
+            // Crear la cabecera del pedido para que el controlador la encuentre
+            var pedido = new Pedido
+            {
+                Fecha = DateTime.Now,
+                Total = 0.0m,
+                Estado = "Pendiente",
+                UsuarioId = 1
+            };
+            context.Pedidos.Add(pedido);
+            await context.SaveChangesAsync();
+
             var controller = new DetallePedidosController(context);
 
             // Queremos vender 5 unidades
@@ -45,7 +56,8 @@ namespace pyfinal_Tests
             {
                 ProductoId = 1,
                 Cantidad = 5,
-                PrecioUnitario = 1500
+                PrecioUnitario = 1500,
+                PedidoId = pedido.Id // <-- referenciar el pedido creado
             };
 
             // --- ACT (Ejecutar la acción) ---
@@ -54,8 +66,9 @@ namespace pyfinal_Tests
             // --- ASSERT (Verificar que funcionó) ---
             var productoResult = await context.Productos.FindAsync(1);
 
+            Assert.NotNull(productoResult);
             // Verificamos: 20 iniciales - 5 vendidos = debe quedar 15
-            Assert.Equal(15, productoResult.Stock);
+            Assert.Equal(15, productoResult!.Stock);
         }
     }
 }

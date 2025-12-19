@@ -24,7 +24,7 @@ namespace pyfinal.Controllers
 
         // GET: api/Pedidos
         [HttpGet]
-        [Authorize (Policy = "PuedeVisualizarPedidos")]
+        [Authorize(Policy = "PuedeVisualizarPedidos")]
         public async Task<ActionResult<IEnumerable<Pedido>>> GetPedidos()
         {
             return await _context.Pedidos.ToListAsync();

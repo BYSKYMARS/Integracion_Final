@@ -83,10 +83,16 @@ namespace pyfinal.Controllers
         [Authorize(Policy = "PuedeCrearProveedores")]
         public async Task<ActionResult<Proveedor>> PostProveedor(Proveedor proveedor)
         {
+            // ---- Cambio: comprobar RUC duplicado y devolver 409 Conflict si existe ----
+            if (await _context.Proveedores.AnyAsync(p => p.RUC == proveedor.RUC))
+            {
+                return Conflict(new { message = "Ya existe un proveedor con ese RUC." });
+            }
+
             _context.Proveedores.Add(proveedor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProveedor", new { id = proveedor.Id }, proveedor);
+            return CreatedAtAction(nameof(GetProveedor), new { id = proveedor.Id }, proveedor);
         }
 
         // DELETE: api/Proveedors/5

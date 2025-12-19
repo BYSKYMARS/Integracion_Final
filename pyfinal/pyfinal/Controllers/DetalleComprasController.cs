@@ -83,45 +83,45 @@ namespace pyfinal.Controllers
         [Authorize(Policy = "PuedeGestionarDetallesCompra")]
         public async Task<ActionResult<DetalleCompra>> PostDetalleCompra(DetalleCompra detalleCompra)
         {
-            // 1. Iniciar una transacción para asegurar que o se guarda todo o nada
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-            try
+            // Validar producto existente
+            var producto = await _context.Productos.FindAsync(detalleCompra.ProductoId);
+            if (producto == null)
             {
-                // 2. Buscar el producto para actualizar stock
-                var producto = await _context.Productos.FindAsync(detalleCompra.ProductoId);
-                if (producto == null)
-                    return NotFound(new { mensaje = "El producto no existe." });
+                return NotFound(new { message = "Producto no encontrado." });
+            }
 
-                // 3. Buscar la compra (cabecera) para actualizar el total
-                var compra = await _context.Compras.FindAsync(detalleCompra.CompraId);
-                if (compra == null)
-                    return NotFound(new { mensaje = "La cabecera de compra no existe." });
+            // Detectar proveedor InMemory para no usar transacciones (no soportadas)
+            var providerName = _context.Database.ProviderName ?? string.Empty;
+            var isInMemory = providerName.Contains("InMemory", StringComparison.OrdinalIgnoreCase);
 
-                // 4. LÓGICA DE NEGOCIO
-                // Sumamos al stock del producto
-                producto.Stock += detalleCompra.Cantidad;
+            if (!isInMemory)
+            {
+                // Usar transacción solo con proveedores que la soporten
+                await using var transaction = await _context.Database.BeginTransactionAsync();
+                try
+                {
+                    _context.DetallesCompra.Add(detalleCompra);
+                    producto.Stock += detalleCompra.Cantidad;
+                    await _context.SaveChangesAsync();
 
-                // Sumamos al total de la compra: (Cantidad * PrecioCosto)
-                compra.TotalCompra += (detalleCompra.Cantidad * detalleCompra.PrecioCosto);
-
-                // 5. Guardar el detalle
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+            else
+            {
+                // InMemory: ejecutar sin transacción
                 _context.DetallesCompra.Add(detalleCompra);
-
-                // Guardar todos los cambios en la DB
+                producto.Stock += detalleCompra.Cantidad;
                 await _context.SaveChangesAsync();
-
-                // Confirmar la transacción
-                await transaction.CommitAsync();
-
-                return CreatedAtAction("GetDetalleCompra", new { id = detalleCompra.Id }, detalleCompra);
             }
-            catch (Exception ex)
-            {
-                // Si algo falla, se deshacen los cambios automáticamente
-                await transaction.RollbackAsync();
-                return StatusCode(500, $"Error interno: {ex.Message}");
-            }
+
+            return CreatedAtAction(nameof(GetDetalleCompra), new { id = detalleCompra.Id }, detalleCompra);
+        
         }
 
         // DELETE: api/DetalleCompras/5

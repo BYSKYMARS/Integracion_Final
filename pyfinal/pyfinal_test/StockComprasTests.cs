@@ -57,10 +57,14 @@ namespace pyfinal_Tests
             await controller.PostDetalleCompra(nuevaCompra);
 
             // 3. ASSERT (Verificar)
+            // Añadir comprobación de null antes de acceder a productoActualizado.Stock
+            // para resolver la advertencia CS8602 en el test.
+
             var productoActualizado = await context.Productos.FindAsync(1);
 
-            // Verificamos: 10 iniciales + 50 comprados = 60 totales
-            Assert.Equal(60, productoActualizado.Stock);
+            // Evitar posible NullReferenceException en el test
+            Assert.NotNull(productoActualizado);
+            Assert.Equal(60, productoActualizado!.Stock);
         }
     }
 }

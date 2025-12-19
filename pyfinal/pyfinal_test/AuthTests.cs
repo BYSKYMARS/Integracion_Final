@@ -49,7 +49,7 @@ namespace pyfinal_Tests
 
             var controller = new AuthController(context, mockConfig.Object);
 
-            var intentoFallido = new Usuario
+            var intentoFallido = new LoginDto
             {
                 Email = "usuario@prueba.com",
                 PasswordHash = "123456" // Contraseña INCORRECTA
@@ -91,7 +91,7 @@ namespace pyfinal_Tests
 
             var controller = new AuthController(context, mockConfig.Object);
 
-            var loginCorrecto = new Usuario
+            var loginCorrecto = new LoginDto
             {
                 Email = "jefe@pyfinal.com",
                 PasswordHash = "123456" // Contraseña correcta

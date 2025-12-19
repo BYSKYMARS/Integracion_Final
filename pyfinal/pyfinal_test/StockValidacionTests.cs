@@ -36,14 +36,26 @@ namespace pyfinal_Tests
             context.Productos.Add(producto);
             await context.SaveChangesAsync();
 
+            // Crear también la cabecera del pedido para poder añadir detalles
+            var pedido = new Pedido
+            {
+                Fecha = DateTime.Now,
+                Total = 0.0m,
+                Estado = "Pendiente",
+                UsuarioId = 1
+            };
+            context.Pedidos.Add(pedido);
+            await context.SaveChangesAsync();
+
             var controller = new DetallePedidosController(context);
 
             // Intentamos vender 10 unidades (Más de lo que tenemos)
             var detalleExcesivo = new DetallePedido
             {
-                ProductoId = 1,
+                ProductoId = producto.Id,
                 Cantidad = 10,
-                PrecioUnitario = 500.0m
+                PrecioUnitario = 500.0m,
+                PedidoId = pedido.Id // <-- ahora referenciamos el pedido existente
             };
 
             // 2. ACT (Ejecutar la acción)
