@@ -1,5 +1,5 @@
 // AQUI TAMBIEN EL PUERTO 7252
-const API_URL = "https://localhost:7252/api"; 
+const API_URL = "https://integracionfinal-production.up.railway.app/api"; 
 
 // 1. VERIFICAR SEGURIDAD
 const token = localStorage.getItem('token');

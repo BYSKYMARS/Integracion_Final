@@ -1,4 +1,4 @@
-const API_URL = "https://localhost:7252/api"; 
+const API_URL = "https://integracionfinal-production.up.railway.app/api"; 
 const token = localStorage.getItem('token');
 
 // Variable global para almacenar productos y sus precios

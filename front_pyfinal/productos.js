@@ -1,4 +1,4 @@
-const API_URL = "https://localhost:7252/api"; // TU PUERTO
+const API_URL = "https://integracionfinal-production.up.railway.app/api"; // TU PUERTO
 const token = localStorage.getItem('token');
 
 // Mapas para guardar los nombres (ID -> Nombre)
