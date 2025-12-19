@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Principal - Logística</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="panel.html">📦 Sistema Logística</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a href="dashboard.html" class="btn btn-outline-light me-2">🏠 Volver al Inicio</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="panel.html">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="productos.html">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="proveedores.html">Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="categorias.html">Categorías</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="compras.html">Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="detallecompras.html">Detalle de Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="pedidos.html">Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="detallepedidos.html">Detalle de Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="envios.html">Envíos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="historialenvios.html">Historial de Envíos</a></li>
+                </ul>
+                <div class="d-flex">
+                    <span class="navbar-text text-white me-3" id="usuarioNombre">Usuario</span>
+                    <button class="btn btn-outline-danger btn-sm" id="btnCerrarSesion">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Gestión de Usuarios</h2>
+        
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+            + Nuevo Usuario
+        </button>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaUsuarios">
+                        <tr><td colspan="5" class="text-center">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalRegistro" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRegistro">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="regNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="regEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="regPassword" required minlength="6">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Rol</label>
+                            <select class="form-select" id="regRol">
+                                <option value="Vendedor">Vendedor</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Repartidor">Repartidor</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Guardar Usuario</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditar">
+                    <input type="hidden" id="editId">
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="editNombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <select class="form-select" id="editRol">
+                            <option value="Vendedor">Vendedor</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Repartidor">Repartidor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-danger">Nueva Contraseña (Opcional)</label>
+                        <input type="password" class="form-control" id="editPassword" 
+                            placeholder="Dejar en blanco para mantener la actual" minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="panel.js"></script>
+</body>
+</html>

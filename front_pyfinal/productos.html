@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="panel.html">📦 Sistema Logística</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a href="dashboard.html" class="btn btn-outline-light me-2">🏠 Volver al Inicio</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="panel.html">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="productos.html">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="proveedores.html">Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="categorias.html">Categorías</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="compras.html">Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="detallecompras.html">Detalle de Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="pedidos.html">Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="detallepedidos.html">Detalle de Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="envios.html">Envíos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="historialenvios.html">Historial de Envíos</a></li>
+                </ul>
+                <div class="d-flex">
+                    <span class="navbar-text text-white me-3" id="usuarioNombre">Usuario</span>
+                    <button class="btn btn-outline-danger btn-sm" id="btnCerrarSesion">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Inventario de Productos</h2>
+            <button class="btn btn-success" onclick="abrirModalCrear()">+ Nuevo Producto</button>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Proveedor</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProductos">
+                            <tr><td colspan="7" class="text-center">Cargando inventario...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalProducto" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal">Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formProducto">
+                        <input type="hidden" id="prodId">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Código (SKU)</label>
+                                <input type="text" class="form-control" id="prodCodigo" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="prodNombre" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Precio Venta</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">S/</span>
+                                    <input type="number" step="0.01" class="form-control" id="prodPrecio" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="prodStock" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <select class="form-select" id="prodCategoria" required>
+                                <option value="">Cargando...</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Proveedor</label>
+                            <select class="form-select" id="prodProveedor" required>
+                                <option value="">Cargando...</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="productos.js"></script>
+</body>
+</html>

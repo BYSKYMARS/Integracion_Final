@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Logística - Envíos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="panel.html">📦 Sistema Logística</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a href="dashboard.html" class="btn btn-outline-light me-2">🏠 Volver al Inicio</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="panel.html">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="productos.html">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="proveedores.html">Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="categorias.html">Categorías</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="compras.html">Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="detallecompras.html">Detalle de Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="pedidos.html">Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="detallepedidos.html">Detalle de Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="envios.html">Envíos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="historialenvios.html">Historial de Envíos</a></li>
+                </ul>
+                <div class="d-flex">
+                    <span class="navbar-text text-white me-3" id="usuarioNombre">Usuario</span>
+                    <button class="btn btn-outline-danger btn-sm" id="btnCerrarSesion">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Lista de Despachos</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoEnvio" onclick="cargarDatosFormulario()">
+                    + Programar Envío
+                </button>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Pedido #</th>
+                            <th>Repartidor</th>
+                            <th>Dirección</th>
+                            <th>Último Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaEnvios"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNuevoEnvio" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formNuevoEnvio">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nuevo Despacho</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Seleccionar Pedido Pagado</label>
+                            <select id="envioPedidoId" class="form-select" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Asignar Repartidor</label>
+                            <select id="envioRepartidorId" class="form-select" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dirección de Destino</label>
+                            <input type="text" id="envioDireccion" class="form-control" maxlength="200" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Crear Envío</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalHistorial" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content border-0">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Trazabilidad del Envío</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="lineaTiempo"></div>
+                    <hr>
+                    <h6>Actualizar Estado:</h6>
+                    <div class="input-group">
+                        <select id="nuevoEstado" class="form-select">
+                            <option value="En Ruta">En Ruta</option>
+                            <option value="Entregado">Entregado</option>
+                            <option value="Fallido">Fallido/Devuelto</option>
+                        </select>
+                        <button class="btn btn-success" id="btnActualizarEstado">Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="envios.js"></script>
+</body>
+</html>

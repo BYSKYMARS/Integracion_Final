@@ -1,0 +1,6 @@
+@pyfinal_HostAddress = http://localhost:5210
+
+GET {{pyfinal_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
